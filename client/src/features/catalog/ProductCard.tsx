@@ -1,24 +1,17 @@
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
 import { Product } from "../../app/models/product";
-import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import { Link } from "react-router-dom";
+import { Shop2Rounded, ShoppingCartCheckoutRounded } from "@mui/icons-material";
 
 interface Props {
     product: Product;
 }
 
-function HomeIcon(props: SvgIconProps) {
-  return (
-    <SvgIcon {...props}>
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-    </SvgIcon>
-  );
-}
 
 
 export default function ProductCard({product}: Props){
     return(
-        <Card>
+        <Card sx={{cursor: 'pointer'}}>
         <CardHeader
             avatar={
              <Avatar sx={{bgcolor: 'secondary.main'}}>
@@ -33,7 +26,7 @@ export default function ProductCard({product}: Props){
         />
 
 <CardMedia
-          sx={{height: '140', backgroundPosition:'center', backgroundSize:'contain', bgcolor: 'secondary.light'}}
+          sx={{height: '140', backgroundPosition:'center', backgroundSize:'contain', bgcolor: 'secondary.light', cursor: 'pointer'}}
           component="img"
           
           image={product.pictureUrl}
@@ -54,8 +47,17 @@ export default function ProductCard({product}: Props){
              </Typography>
         </CardContent>
         <CardActions>
-          <Button variant='outlined' color="primary" disableElevation size="small" startIcon={<DeleteForeverTwoToneIcon color="warning" />}>Buy Now</Button>
-          <Button variant='outlined' size="small" startIcon={<HomeIcon color="success" />}>Add To Cart</Button>
+          <Button variant='contained' color="primary" size="small" startIcon={<Shop2Rounded sx={{color: '#fff'}} />}>Buy Now</Button>
+          <Button
+          component={Link}
+          to={`/catalog/${product.id}`}
+           variant='contained'
+           color="error" 
+           size="small" 
+           sx={{ml: 1}}
+           endIcon={<ShoppingCartCheckoutRounded sx={{color: '#fff'}}
+            />}>
+              View Details</Button>
         </CardActions>
       </Card>
       
