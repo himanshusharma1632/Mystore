@@ -1,28 +1,56 @@
-import { ShoppingBagRounded, ShoppingCartCheckoutRounded } from "@mui/icons-material";
-import { Button, createTheme, Divider, Grid, Rating, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
-import axios from "axios";
+import { ShoppingCartCheckoutRounded } from "@mui/icons-material";
+import { Button, Divider, Grid, Rating, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
 import Loading from "../../app/layout/Loading";
 import {Product} from "../../app/models/product";
+import { useAppDispatch, useAppSelector } from "../../app/REDUX/configureStore";
+import { addBasketItemAsync, removeBasketItemAsync } from "../BasketPage/BasketSlice";
+import { catalogSlice, productFetchAsync, productSelector } from "./catalogSlice";
+
 
 export default function ProductDetails() {
-  debugger;
     const {id} = useParams<{id: string}>();
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(true);
+    const product = useAppSelector(state => productSelector.selectById(state, id));
+        
+    const dispatch = useAppDispatch();
+    const { basket, status } = useAppSelector(state => state.basket);
+    const { status : productStatus } = useAppSelector(state => state.catalog);
+    const [quantity, setQuantity] = useState(0);
     
+    const items = basket?.items.find(i=> i.productId===product?.id);
+
     useEffect(() => {
-      agent.Catalog.details(parseInt(id))
-     .then(response => setProduct(response))
-     .catch(error => console.log(error))
-     .finally(() => setLoading(false)); 
-    }, [id])
+      if (items) setQuantity(items.quantity);
+       if (!product) dispatch(productFetchAsync(parseInt(id)));
+    }, [id, items, dispatch, product])
+  
+
+    function handleUpdateCart() {
+     //adding item from page to cart
+     if (!items || quantity > items.quantity){
+       const UpdateQuantity = items ? quantity - items.quantity : quantity;
+       dispatch(addBasketItemAsync({productId : product?.id!, quantity : UpdateQuantity}))
+     }else {
+       //removing item from page to cart
+       const UpdateRemoval = items.quantity - quantity;
+       dispatch(removeBasketItemAsync({productId : product?.id!, quantity : UpdateRemoval}));
+     }
+    }
     
-    if(loading) return <Loading />
+    
+
+  function handleInputQuantity(event : any) {
+    if (event.target.value > 0){
+    setQuantity(parseInt(event.target.value));
+    }
+  }
+
+    if(productStatus.includes('pending')) return <Loading />
     if(!product) return <h3>Product Not Found ! ....</h3>
+
     
     return(
         <Grid container spacing={6} sx={{mt: 8}}>
@@ -80,19 +108,26 @@ export default function ProductDetails() {
    
    <Grid container spacing={1} sx={{mt: 1}}>
      <Grid item xs={6}>
-       <Button variant="contained"
-        size="medium"
-        color="secondary" 
-        sx={{width: '100%'}}
-        startIcon={<ShoppingBagRounded sx={{color: '#fff'}}/>}>Buy Now</Button>
+       <TextField 
+        value={quantity}
+        onChange={handleInputQuantity}
+        variant="outlined"
+        fullWidth
+        label="quantity"
+        type="number"
+       />
      </Grid>
 
      <Grid item xs={6}>
      <Button variant="contained"
+     disabled ={items?.quantity === quantity}
         size="medium"
         color="warning" 
-        sx={{width: '100%'}}
-        startIcon={<ShoppingCartCheckoutRounded sx={{color: '#fff'}}/>}>Add to Cart</Button>
+        fullWidth
+        sx={{width: '100%', height: 55}}
+        startIcon={<ShoppingCartCheckoutRounded sx={{color: '#fff'}}/>}
+        onClick={handleUpdateCart}
+        >{items ? "Update Cart" : "Add To Cart"}</Button>
      </Grid>
    </Grid>  
            </Grid>

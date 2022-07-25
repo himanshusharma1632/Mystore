@@ -1,6 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { useAppSelector } from "../REDUX/configureStore";
 
 
 interface Props{
@@ -37,6 +38,10 @@ const NavStyles={
 
 
 export default function Header({ darkMode, HandleThemeChange}: Props){
+
+const { basket } = useAppSelector(state => state.basket);
+const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0);
+
     return(
         <AppBar position='fixed' sx={{mb: 9}}>
             <Toolbar 
@@ -90,8 +95,12 @@ export default function Header({ darkMode, HandleThemeChange}: Props){
                ))}
             </List>
 
-            <IconButton size='large' sx={{color: 'inherit'}}>
-                    <Badge badgeContent={4} color='warning'>
+            <IconButton size='large' 
+            sx={{color: 'inherit'}}
+            component={Link}
+            to='/BasketPage'
+            >
+                    <Badge badgeContent={CountBasket} color='warning'>
                         <ShoppingCart />
                     </Badge>
                     </IconButton>

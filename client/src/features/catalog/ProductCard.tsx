@@ -2,6 +2,13 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, 
 import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
 import { Shop2Rounded, ShoppingCartCheckoutRounded } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import agent from "../../app/api/agent";
+import { useStoreContext } from "../../app/context/StoreContext";
+
+import { setBasket } from "../BasketPage/BasketSlice";
+import { useAppDispatch, useAppSelector } from "../../app/REDUX/configureStore";
+import { catalogSlice } from "./catalogSlice";
 
 interface Props {
     product: Product;
@@ -10,6 +17,18 @@ interface Props {
 
 
 export default function ProductCard({product}: Props){
+
+const[loading, setloading] = useState(true);
+const dispatch = useAppDispatch();
+
+function HandleAddItem(productId: number){
+  setloading(true);
+  agent.BasketFetcher.AddBasketItem(productId)
+  .then(basket => dispatch(setBasket(basket)))
+  .catch(error=> console.log(error))
+  .finally(()=> setloading(false));
+}
+
     return(
         <Card sx={{cursor: 'pointer'}}>
         <CardHeader
@@ -47,7 +66,14 @@ export default function ProductCard({product}: Props){
              </Typography>
         </CardContent>
         <CardActions>
-          <Button variant='contained' color="primary" size="small" startIcon={<Shop2Rounded sx={{color: '#fff'}} />}>Buy Now</Button>
+          <Button variant='contained'
+           color="primary" 
+          size="small" 
+          onClick={()=> HandleAddItem(product.id)}
+          startIcon={<Shop2Rounded sx={{color: '#fff'}}
+           />}>
+             Cart
+           </Button>
           <Button
           component={Link}
           to={`/catalog/${product.id}`}
