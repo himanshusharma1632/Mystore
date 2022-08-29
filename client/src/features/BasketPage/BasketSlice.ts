@@ -1,8 +1,7 @@
-import { ActionTypes } from "@mui/lab/node_modules/@mui/base";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { stat } from "fs";
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import agent from "../../app/api/agent";
 import { Basket } from "../../app/models/Basket";
+import { getCookie } from "../../app/util/Cookies";
 
 interface BasketState {
     basket : Basket | null,
@@ -13,6 +12,21 @@ const initialState : BasketState = {
     basket : null,
     status : 'idle_State',
 }
+
+export const fetchBasketAsync = createAsyncThunk<Basket>(
+    'basket/fetchBasketAsync',
+    async (_, thunkAPI) => {
+        try {
+            return await agent.BasketFetcher.getBasket()
+        }catch(error : any){
+            return thunkAPI.rejectWithValue({error : error.data});
+        }
+    }, {
+        condition : () => {
+            if(!getCookie('buyerId')) return false;
+        }
+    }
+)
 
 export const addBasketItemAsync = createAsyncThunk<Basket , {productId : number, quantity: number}>(
     'basket/addBasketItemAsync',
@@ -50,13 +64,6 @@ export const basketSlice = createSlice({
         builder.addCase(addBasketItemAsync.pending, (state)=> {
             state.status = 'Item_Pending';
         });
-        builder.addCase(addBasketItemAsync.fulfilled, (state, action) => {
-            state.basket = action.payload;
-            state.status = 'idle_State';
-        });
-        builder.addCase(addBasketItemAsync.rejected, (state)=> {
-            state.status = 'idle_State';
-        });
         builder.addCase(removeBasketItemAsync.pending, (state, action) => {
             state.status = 'item_Pending' + action.meta.arg.productId;
         });
@@ -71,6 +78,13 @@ export const basketSlice = createSlice({
             state.status = 'idle_State';
         });
         builder.addCase(removeBasketItemAsync.rejected, (state)=> {
+            state.status = 'idle_State';
+        });
+        builder.addMatcher(isAnyOf(addBasketItemAsync.fulfilled, fetchBasketAsync.fulfilled),  (state, action) => {
+            state.basket = action.payload;
+            state.status = 'idle_State';
+        });
+        builder.addMatcher(isAnyOf(addBasketItemAsync.rejected, fetchBasketAsync.rejected),  (state)=> {
             state.status = 'idle_State';
         });
 

@@ -1,7 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Container, CssBaseline } from "@mui/material";
 import Header from "./Header";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AboutPage from "../../features/about/AboutPage";
 import { Route } from "react-router-dom";
 import ProductDetails from "../../features/catalog/ProductDetails";
@@ -18,8 +18,11 @@ import BasketPage from "../../features/BasketPage/BasketPage";
 import agent from "../api/agent";
 import { getCookie } from "../util/Cookies";
 import Loading from "./Loading";
-import { setBasket } from "../../features/BasketPage/BasketSlice";
-import { useAppDispatch } from "../REDUX/configureStore";
+import { fetchBasketAsync, setBasket } from "../../features/BasketPage/BasketSlice";
+import { useAppDispatch, useAppSelector } from "../REDUX/configureStore";
+import Login from "../../features/account/Login/Login";
+import Register from "../../features/account/Register/Register";
+import { fetchUserAsync } from "../../features/account/accountSlice";
 
 
 
@@ -31,25 +34,17 @@ const [initializing, setinitializing] = useState(true);
 const dispatch = useAppDispatch();
 const [darkMode , setDarkMode]= useState(false);
 
+const InitializeApplication = useCallback(async () => {
+  try{
+await dispatch(fetchUserAsync());
+await dispatch(fetchBasketAsync());
+  }catch(error : any){
+    console.log(error);
+  }}, [dispatch]);
 
 useEffect(()=>{
-const buyerId = getCookie('buyerId');
-  if(buyerId){
-agent.BasketFetcher.getBasket()
-.then(
-  function(basket){
-    return dispatch(setBasket(basket));
-  }
-)
-.catch(
-  function(error){
-    console.log(error);
-  }
-).finally(()=>setinitializing(false));
-  }else{
-    setinitializing(false);
-  } 
-}, [setBasket])
+InitializeApplication().then(() => setinitializing(false));
+}, [InitializeApplication])
 
 if (initializing) return <Loading message="Staging App ..." />
 
@@ -86,6 +81,8 @@ if (initializing) return <Loading message="Staging App ..." />
      <Route exact path='/Collections' component={CollectionPage} />
      <Route exact path ='/server-error' component={ServerError} />
      <Route exact path ='/BasketPage' component={BasketPage} />
+     <Route exact path ='/account/Login' component={Login} />
+     <Route exact path ='/account/Register' component={Register} />
      <Route component ={NotFound} />
      </Switch>
      </Container>

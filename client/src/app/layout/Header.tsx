@@ -1,7 +1,8 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-import { useAppSelector } from "../REDUX/configureStore";
+import { RootState, useAppSelector } from "../REDUX/configureStore";
+import SignedInUserMenu from "./SignedInUserMenu";
 
 
 interface Props{
@@ -17,8 +18,8 @@ const MidLinks=[
 ]
 
 const RightLinks=[
-    {title : 'Login', path: '/login'},
-    {title : 'Register', path: '/register'}, 
+    {title : 'Login', path: '/account/Login'},
+    {title : 'Register', path: '/account/Register'}, 
 ]
 
 const NavStyles={
@@ -38,8 +39,8 @@ const NavStyles={
 
 
 export default function Header({ darkMode, HandleThemeChange}: Props){
-
-const { basket } = useAppSelector(state => state.basket);
+const { user } = useAppSelector((state : RootState) => state.account);
+const { basket } = useAppSelector((state : RootState) => state.basket);
 const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0);
 
     return(
@@ -81,7 +82,9 @@ const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0)
           <Box display='flex'
                alignItems='center'
                 >
-                
+            {user ? (
+                <SignedInUserMenu />
+            ) : (
                 <List sx={{display: 'flex'}}>
                 {RightLinks.map(({title, path})=>(
                  <ListItem
@@ -94,7 +97,7 @@ const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0)
                  </ListItem>
                ))}
             </List>
-
+            )}
             <IconButton size='large' 
             sx={{color: 'inherit'}}
             component={Link}

@@ -2,13 +2,11 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, 
 import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
 import { Shop2Rounded, ShoppingCartCheckoutRounded } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
 
 import { setBasket } from "../BasketPage/BasketSlice";
-import { useAppDispatch, useAppSelector } from "../../app/REDUX/configureStore";
-import { catalogSlice } from "./catalogSlice";
+import { useAppDispatch } from "../../app/REDUX/configureStore";
 
 interface Props {
     product: Product;

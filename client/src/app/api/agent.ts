@@ -1,12 +1,11 @@
-import { Close } from "@mui/icons-material";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { request } from "http";
 import { toast } from "react-toastify";
 import { URLSearchParams } from "url";
 import { history } from "../..";
 import { PaginatedResponse } from "../models/pagination";
+import { store } from "../REDUX/configureStore";
 
-const sleep =()=> new Promise(resolve => setTimeout(resolve, 2000));
+const sleep =()=> new Promise(resolve => setTimeout(resolve, 500));
 
 axios.defaults.baseURL='http://localhost:5000/api/';
 axios.defaults.withCredentials =true;
@@ -40,6 +39,18 @@ const BasketFetcher ={
     RemoveBasketItem: (productId: number, quantity = 1)=> requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
 }
 
+const Account = {
+    login : (values : any) => requests.post('account/login', values),
+    register : (values : any) => requests.post('account/register', values),
+    currentUser : () => requests.get('account/currentUser'),
+}
+
+axios.interceptors.request.use(config => {
+    const token = store.getState().account.user?.Token;
+    if(token) config.headers!.Authorization = `Bearer ${token}`;
+        return config;
+});
+
 axios.interceptors.response.use(async response =>{
     await sleep();
     const pagination = response.headers['pagination']; //axios always accept the lower case header namings
@@ -71,7 +82,7 @@ axios.interceptors.response.use(async response =>{
         });
         break;
         
-        case 401: toast.error(data.title, {
+        case 401: toast.error(data.detail, {
             theme: "dark",
         });
         break;
@@ -92,16 +103,11 @@ axios.interceptors.response.use(async response =>{
         break;
 
     }
-
-
-
-
-
     return Promise.reject(error.response);
 })
 
 const agent = {
-    Catalog, TestError, BasketFetcher,
+    Catalog, TestError, BasketFetcher, Account
 }
 
 export default agent;

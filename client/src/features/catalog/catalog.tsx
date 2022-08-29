@@ -19,7 +19,7 @@ export default function Catalog() {
 
 
     const products = useAppSelector(productSelector.selectAll);
-    const { loadedProducts, status, filtersLoaded, brandList, typeList, productParams, metaData } = useAppSelector(state => state.catalog);
+    const { loadedProducts, filtersLoaded, brandList, typeList, productParams, metaData } = useAppSelector(state => state.catalog);
     const dispatch = useAppDispatch();
 
 
@@ -31,12 +31,12 @@ export default function Catalog() {
         if (!filtersLoaded) dispatch(fetchFilters());
     }, [filtersLoaded, dispatch]);
 
-    if (status.includes('pending') || !metaData) return <Loading />
+    if (!filtersLoaded) return <Loading />
 
 
     return (
         <>
-            <Grid container spacing={4} sx={{ mt: 8 }}>
+            <Grid container columnSpacing={3} rowSpacing={1} sx={{ mt: 8 }}>
                 <Grid item xs={3}>
                     <Paper sx={{ mt: 0, p: 2 }}>
                       <SearchPage />
@@ -66,12 +66,14 @@ export default function Catalog() {
                     <ProductList products={products} />
                 </Grid>
 
-                <Grid item xs={3} />
-              <Grid item xs ={9}>
+                <Grid item xs={3} sx={{mb: 2}} />
+              <Grid item xs ={9} sx={{mb: 2}} >
+                  {metaData &&
               <PaginationPage
                onPageChange ={(page : number) => dispatch(setProductParams({pageNumber : page}))}
                metaData = {metaData}
               />
+                  }
          </Grid>
       </Grid>
         </>

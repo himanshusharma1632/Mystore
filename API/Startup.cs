@@ -1,11 +1,22 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Net.NetworkInformation;
+using System.Text;
 using API.Data;
+using API.Entities;
 using API.Middleware;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -29,6 +40,28 @@ namespace API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme{
+                   Name = "Authorization",
+                   Description = "JWT Auth Token",
+                   In = ParameterLocation.Header,
+                   Scheme = "Bearer",
+                   BearerFormat = "JWT",
+                   Type = SecuritySchemeType.ApiKey,
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme {
+                          Reference = new OpenApiReference {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer", 
+                          },
+                            Name = "oauth2",
+                            In = ParameterLocation.Header,
+                            Scheme = "Bearer"
+                        },
+                       new List<string>()
+                    }
+                });
             });
 
             //Database Context Service
@@ -39,6 +72,27 @@ namespace API
 
             //Cors Services
             services.AddCors();
+            //Identity Service
+            services.AddIdentityCore<User>(options => {
+            options.User.RequireUniqueEmail = true;
+            })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<StoreContext>();
+            //Authentication Service
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters{
+                     ValidateIssuer = false,
+                     ValidateAudience = false,
+                     ValidateLifetime = true,
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTSettings:TokenKey"]))
+                };
+            });
+            //Authorization Service
+            services.AddAuthorization();
+            //our custom token (JWT) service
+            services.AddScoped<TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,13 +107,23 @@ namespace API
             }
 
            // app.UseHttpsRedirection();
-
+            //app.UseResponseCompression();
             app.UseRouting();
 
             app.UseCors(opt =>
             {
             opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
             });
+
+            //for using formFiles
+            app.UseStaticFiles(new StaticFileOptions(){
+                FileProvider = new PhysicalFileProvider
+                (Path.Combine(Directory.GetCurrentDirectory(), @"Uploads")), 
+                RequestPath = new PathString("/Uploads")
+            });
+           // 
+            
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

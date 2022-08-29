@@ -31,10 +31,10 @@ params.append('searchTerm', productParams.searchTerm);
 
 //for brandList
 if (productParams.brandList)
-params.append('brandList', productParams.brandList.toString()); //because brandList is a string[]
+params.append('Brand', productParams.brandList.toString()); //because brandList is a string[]
 
 if (productParams.typeList)
-params.append('typeList', productParams.typeList.toString()); //because typeList is the string[]
+params.append('Type', productParams.typeList.toString()); //because typeList is the string[]
 
 return params;
 }
