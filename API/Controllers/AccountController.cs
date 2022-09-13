@@ -1,16 +1,14 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extentions;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -19,9 +17,11 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
         private readonly IWebHostEnvironment _fileEnv;
+        private readonly StoreContext _context;
         public AccountController(UserManager<User> userManager, TokenService tokenService, 
-        IWebHostEnvironment fileEnv)
+        IWebHostEnvironment fileEnv, StoreContext context)
         {
+            _context = context;
             _fileEnv = fileEnv;
             _tokenService = tokenService;
             _userManager = userManager;  
@@ -40,37 +40,34 @@ return Unauthorized(new ProblemDetails{
 });
 }
 
+var userBasket = await BasketGetter(loginDTO.userName);
+var unknownBasket = await BasketGetter(Request.Cookies["buyerId"]);
+if(unknownBasket != null){
+    if(userBasket != null) _context.Baskets.Remove(userBasket);
+    unknownBasket.BuyerId = user.UserName;
+    Response.Cookies.Delete("buyerId");
+    await _context.SaveChangesAsync();
+}
+
 return new UserDTO {
 Email = user.Email,
 Token = await _tokenService.GenerateToken(user),
-Name = user.Name,
-profilePhotoURL = user.profilePhotoURL,
+PhoneNumber = user.PhoneNumber,
+userName = user.UserName,
+Basket = unknownBasket != null ? unknownBasket.BasketDTOGetter() : userBasket?.BasketDTOGetter()
 };
 }
 
 //for register
-[HttpPost("register"), DisableRequestSizeLimit]
-public async Task<IActionResult> RegisterUser([FromForm]RegisterDTO registerDTO)
+[HttpPost("register")]
+public async Task<ActionResult> RegisterUser(RegisterDTO registerDTO)
 {
-//getting the file from request
-//var postedProfile = Request.Form.Files[0];
-//setting the Uploads folder
-//var Uploads = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
- /*if (postedProfile.Length > 0){
-    var fileName = ContentDispositionHeaderValue.Parse(postedProfile.ContentDisposition).FileName;
-    var pathToSave = Path.Combine(Uploads, fileName.ToString());
-    using(var fileStream = new FileStream(pathToSave, FileMode.Create)){
-       await postedProfile.CopyToAsync(fileStream);
-    }*/
-//var uploadedProfile = await SaveProfile(registerDTO.profilePhotoURL);
 var registeredUser = new User{
     UserName = registerDTO.userName,
     Email = registerDTO.Email,
     Name = registerDTO.Name,
-    profilePhotoURL = await SaveProfile(registerDTO.profilePhotoURL),
     PhoneNumber = registerDTO.PhoneNumber,
 };
-
 var result = await _userManager.CreateAsync(registeredUser, registerDTO.Password);
 if (!result.Succeeded) {
     foreach(var Error in result.Errors)
@@ -82,46 +79,36 @@ if (!result.Succeeded) {
 
 await _userManager.AddToRoleAsync(registeredUser, "Member");
 return StatusCode(201);
-//return Ok($"Saved file {await SaveProfile(registerDTO.profilePhotoURL)} into the Server. Thank You!!");
-//}
-/*else {
-    return BadRequest(new ProblemDetails{
-        Title = "400 - Bad Request",
-        Status = 400,
-        Detail = "File not Uploaded"
-            });
-}*/
-//return StatusCode(201);
 }
 
 [Authorize]
 [HttpGet("currentUser")]
 public async Task<ActionResult<UserDTO>> GetCurrentUser() {
 var user = await _userManager.FindByNameAsync(User.Identity.Name);
+var userBasket = await BasketGetter(User.Identity.Name);
 
-return new UserDTO{
-    Email = user.Email,
-    Token = await _tokenService.GenerateToken(user),
-    Name = user.Name,
-    profilePhotoURL = user.profilePhotoURL,
- };
+return new UserDTO {
+Email = user.Email,
+Token = await _tokenService.GenerateToken(user),
+userName = user.UserName,
+PhoneNumber = user.PhoneNumber,
+Basket = userBasket?.BasketDTOGetter()
+};
 }
 
-//seperate method for SavingProfile Image to Server [Attribute:  NonAction]
-[NonAction]
-public  async Task<string> SaveProfile(IFormFile imageFile){
-string fileName = null;
-if (imageFile != null) {
-    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-    //this is encoded file
-    fileName = Guid.NewGuid().ToString() + "_" + imageFile;
-    string filePATH = Path.Combine(uploadsFolder, fileName);
-    using(var fileStream = new FileStream(filePATH, FileMode.Create)){
-        await imageFile.CopyToAsync(fileStream);
-    }}  
-return fileName;
-}
+//code for getting the basket
+ private async Task<Basket> BasketGetter(string buyerId)
+        {
+            if(string.IsNullOrEmpty(buyerId)){
+                Response.Cookies.Delete("buyerId");
+                return null;
+            }
+            return await _context.Baskets
+                        .Include(i => i.Items)
+                        .ThenInclude(p => p.Product)
+                        .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
 
+        }
 
  }
 }

@@ -10,8 +10,8 @@ namespace API.DTOs
          public string Email { get; set; }
          public string Name { get; set; }
 
-         [NotMapped]
-         public IFormFile profilePhotoURL { get; set; }
+         //[NotMapped]
+        // public IFormFile profilePhotoURL { get; set; }
          public string PhoneNumber { get; set; }
     }
 }

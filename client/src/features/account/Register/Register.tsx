@@ -1,214 +1,169 @@
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme } from '@mui/material/styles';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
+import { LoadingButton } from '@mui/lab';
+import { useHistory } from 'react-router-dom';
 import agent from '../../../app/api/agent';
-import { Paper, Stack } from '@mui/material';
-import { Image, Photo } from '@mui/icons-material';
-import { useState } from 'react';
-import { User } from '../../../app/models/User';
-import { json } from 'stream/consumers';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-       MyStore.com
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const theme = createTheme();
 
 export default function Register() {
-const [formdata, setFromData] = useState<User>({
-email : "",
-Token : "",
-name : "",
-profilePhotoURL : "",
-profileName : "",
-profileFile : null,
+const history = useHistory();
+const { register, handleSubmit, setError, formState : {isSubmitting, isValid, errors}} = useForm({
+  mode : 'all'
 });
 
-const handleInputChange = (event : any) => {
-const {name, value} = event.target;
-setFromData({...formdata!, [name] : value});
-}
-
-const ShowPreview = (event : any) => {
-if (event.target.files && event.target.files[0]){
-let profileImage = event.target.files[0];
-const reader = new FileReader();
-
-reader.onload = (x : any) => {
-  setFromData({
-    ...formdata,
-    profileFile : profileImage,
-    profilePhotoURL : x.target?.result
-  })
-}
-reader.readAsDataURL(profileImage);
- }else {
-  setFromData({
-    ...formdata,
-    profileFile : null,
-    profilePhotoURL : ""
-  })
- }
-}
-
-
-//const [uploadImage, setUploadImage] = useState({preview : ''});
-const {register, handleSubmit, formState : {isValid, isSubmitting, errors}} = useForm<User>({ mode : 'all' });
-const onSubmit = async (data : FieldValues) => {
-  await agent.Account.register(data);
-}
-/*const handleUploadImage = (event : any) => {
-if(event.target.files.length){
-    let imageURL = event.target.files[0];
-    setUploadImage({preview : URL.createObjectURL(imageURL)});
-    console.log(imageURL);
-}};*/
+const handleErrors = (errors : any) => {
+  if(errors){
+   errors.forEach((error : any) => {
+    if(error.includes('userName')){
+      setError('userName', {message : error});
+    }else if(error.includes('email')){
+      setError('email', {message : error});
+    }else if(error.includes('PhoneNumber')){
+      setError('PhoneNumber', {message : error})
+    }else if(error.includes('password')){
+      setError('password', {message : error});
+    }
+   });
+  }
+}; 
 
   return (
-      <Container component="main" maxWidth="sm" sx={{justifyContent : 'center' , alignItems : 'center'}}>
-        <Box
+      <Grid container spacing={0}
+       component="main"
+       sx={{ height: '80vh', mt: 9, p: 0, 
+        justifyContent : 'center',
+       }}>
+        <Grid
+          item
+          xs={false}
+          lg={6}
+          sm={4}
+          md={7}
           sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            borderRadius : '10px',
-            p: 5, mt : 18
+            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderTopLeftRadius : '10px',
+            borderBottomLeftRadius : '10px',
+            height : 'auto',
           }}
-          component ={Paper}
-          elevation ={0}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-            <Stack direction ="row" spacing ={1}>
-              <Grid item sx={{m: 1}} xs={6}>
-                <Grid container spacing={1}>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="name"
-                  required
-                  fullWidth
-                  id="Name"
-                  label="Full Name"
-                  autoFocus
-                  {...register('name', {
-                    onChange : handleInputChange,
-                    required : 'Please Enter your Full name here!!'
-                  })}
-                  error={!!errors.name}
-                  helperText ={errors?.name?.message}
-                />
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  autoComplete="email"
-                  {...register('email', {
-                    onChange :  handleInputChange,
-                    required : 'A valid email address is required !'
-                  })}
-                  error={!!errors.email}
-                  helperText ={errors?.email?.message ? errors?.email?.message : 'We will not share your email with anyone'}
-                />
-              </Grid>
-              <Grid item xs={12}>
-               <Button
-                variant="contained" 
-                component="label" 
-                endIcon={<Photo />}
+        />
+        <Grid item xs={12} sm={8} md={5} lg={6}
+         component={Paper}
+         sx={{borderTopRightRadius : '10px', borderBottomRightRadius : '10px'}}
+         elevation={0}
+         square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign In
+            </Typography>
+            <Box component="form" noValidate 
+            onSubmit=
+            {handleSubmit((data : FieldValues) => agent.Account.register(data)
+             .then(() => history.push('Login'))    
+             .catch((error : any) => handleErrors(error)))} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
                 fullWidth
-                {...register('profilePhotoURL', {
-                  onChange : handleInputChange,
-                  required : 'Please insert a profile image'
+                type ='text'
+                label="Username"
+                autoComplete="username"
+                autoFocus = {true}
+                {...register('userName', {
+                  required : 'username is required!'
                 })}
-                >
-                  {formdata.profilePhotoURL ? "Change Profile" : "Upload Profile Image"}
-                 {/*uploadImage.preview ? "Change Image" : "Upload Image"*/}
-                <input hidden multiple type="file" 
-                 accept= "image/*"
-                 onChange={ShowPreview}
-                 />
-                </Button>
-                <Typography variant ='body2'>{errors.profilePhotoURL?.message ? errors.profilePhotoURL?.message : "Select your display image"}</Typography>
-              </Grid>
-              </Grid>
-              </Grid>
-
-              <Grid item xs={6} >
-                <Grid container spacing ={0}>
-                    <Grid item xs={12} sx={{mt : 0, m : 1, border : '1px solid #000'}}>
-                    <Paper elevation ={2} sx={{justifyContent : 'center' , alignItems : 'center', m: 2}}>
-                    <img src={formdata?.profilePhotoURL ? formdata.profilePhotoURL : ''} alt ={formdata?.profileName} width ="100%" height = "175px" />
-                    
-                {/*uploadImage.preview ?
-                    (<img src = {uploadImage.preview} alt="profile photo" width ="100%" height = "175px" />) : 
-                    (<Image color='disabled' sx ={{width : '100%' , height : 'auto'}} />)
-              */}
-                    </Paper>
-                  </Grid>
+                placeholder="Enter a username"
+                error={!!errors?.userName}
+                helperText ={errors?.userName?.message}
+              />
+               <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Email"
+                type="email"
+                {...register('Email', {
+                  required : 'cannot leave Email as empty!',
+                  pattern : /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/
+                })}
+                autoFocus ={true}
+                placeholder = "Enter your Email ID"
+                error={!!errors?.Email}
+                helperText ={errors?.Email?.message}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Contact Info."
+                type="tel"
+                {...register('PhoneNumber', {
+                  required : 'Please provide phone number for better delivery exp.',
+                  pattern : /(\s*\(?0\d{4}\)?(\s*|-)\d{3}(\s*|-)\d{3}\s*)|(\s*\(?0\d{3}\)?(\s*|-)\d{3}(\s*|-)\d{4}\s*)|(\s*(7|8)(\d{7}|\d{3}(\-|\s{1})\d{4})\s*)/
+                })}
+                autoFocus ={true}
+                placeholder = "Your 10 digits phone no."
+                error={!!errors?.PhoneNumber}
+                helperText ={errors?.PhoneNumber?.message}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+                {...register('Password', {
+                  required : 'cannot leave the password empty!',
+                  pattern : /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/
+                })}
+                autoFocus ={true}
+                placeholder = "Enter a password"
+                error={!!errors?.Password}
+                helperText ={errors?.Password?.message}
+              />
+              <LoadingButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                loading={isSubmitting}
+                disabled={!isValid}
+              >
+               {"Register"} 
+              </LoadingButton>
+              <Grid container>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
                 </Grid>
               </Grid>
-              </Stack>
-           
-              
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
+        </Grid>
+      </Grid>
   );
 }

@@ -1,6 +1,7 @@
 import { Add, DeleteOutlined, Remove } from "@mui/icons-material";
-import { Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import Loading from "../../app/layout/Loading";
 import { useAppDispatch, useAppSelector } from "../../app/REDUX/configureStore";
 import { addBasketItemAsync, removeBasketItemAsync, setBasket } from "./BasketSlice";
@@ -79,6 +80,12 @@ if(!basket) return <Typography variant="h4" sx={{mt: 10}}>Your Basket Is Empty</
   
 <Grid item xs={12} lg={4} md={4}>
   <BasketSummary />
+</Grid>
+<Grid item xs={12} lg={8} md={8} />
+<Grid item xs={12} lg={4} md={4}>
+  <Link to ="CheckoutPage">
+  <Button variant="contained" color='success' fullWidth sx={{textDecoration : 'none'}}>Proceed to Checkout</Button>
+  </Link>
 </Grid>
         </Grid>
 

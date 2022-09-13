@@ -109,7 +109,7 @@ namespace API
            // app.UseHttpsRedirection();
             //app.UseResponseCompression();
             app.UseRouting();
-
+            
             app.UseCors(opt =>
             {
             opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");

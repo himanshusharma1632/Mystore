@@ -8,13 +8,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { FieldValues, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/REDUX/configureStore';
 import { loginUserAsync } from '../accountSlice';
 
 
 export default function Login() {
 const history = useHistory();
+const location = useLocation<any>();
 const dispatch = useAppDispatch();
 const { register, handleSubmit, formState : {isSubmitting, isValid, errors}} = useForm({
   mode : 'all'
@@ -22,7 +23,7 @@ const { register, handleSubmit, formState : {isSubmitting, isValid, errors}} = u
 
 const submitForm = async (data : FieldValues) => {
   await dispatch(loginUserAsync(data));
-  history.push('/catalog');
+  history.push(location.state?.from?.pathname || 'catalog');
 };
 
   return (

@@ -14,7 +14,6 @@ namespace API.Data
          var user = new User {
              UserName = "Himanshu",
              Name = "Himanshu Sharma",
-             profilePhotoURL = "/images/profiles/mark.jpg",
              Email = "himsharma1632000@gmail.com",
              PhoneNumber = "8114461557",
          };
@@ -25,7 +24,6 @@ namespace API.Data
         var admin = new User {
           UserName = "Admin-Himanshu",
           Name = "Ujjawal Sharma",
-          profilePhotoURL = "/images/profiles/billGates.jpg",
           Email = "admin-hs@gmail.com",
           PhoneNumber = "9461842043"
         };

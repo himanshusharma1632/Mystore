@@ -15,14 +15,14 @@ import ServerError from "../error/ServerError";
 import NotFound from "../error/NotFound";
 import { Switch } from "react-router-dom";
 import BasketPage from "../../features/BasketPage/BasketPage";
-import agent from "../api/agent";
-import { getCookie } from "../util/Cookies";
 import Loading from "./Loading";
-import { fetchBasketAsync, setBasket } from "../../features/BasketPage/BasketSlice";
-import { useAppDispatch, useAppSelector } from "../REDUX/configureStore";
+import { fetchBasketAsync } from "../../features/BasketPage/BasketSlice";
+import { useAppDispatch } from "../REDUX/configureStore";
 import Login from "../../features/account/Login/Login";
 import Register from "../../features/account/Register/Register";
 import { fetchUserAsync } from "../../features/account/accountSlice";
+import PrivateRoute from "../../features/account/PrivateRoute";
+import CheckoutPage from "../../features/CheckoutPage/CheckoutPage";
 
 
 
@@ -36,8 +36,8 @@ const [darkMode , setDarkMode]= useState(false);
 
 const InitializeApplication = useCallback(async () => {
   try{
-await dispatch(fetchUserAsync());
-await dispatch(fetchBasketAsync());
+       await dispatch(fetchUserAsync());
+       await dispatch(fetchBasketAsync());
   }catch(error : any){
     console.log(error);
   }}, [dispatch]);
@@ -83,6 +83,7 @@ if (initializing) return <Loading message="Staging App ..." />
      <Route exact path ='/BasketPage' component={BasketPage} />
      <Route exact path ='/account/Login' component={Login} />
      <Route exact path ='/account/Register' component={Register} />
+     <PrivateRoute exact path='/CheckoutPage' component={CheckoutPage} />
      <Route component ={NotFound} />
      </Switch>
      </Container>

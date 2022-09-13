@@ -7,7 +7,6 @@ namespace API.Entities
 {
     public class User : IdentityUser
     {
-        public string profilePhotoURL {get; set; }
         public string Name { get; set; }
     }
 }

@@ -1,7 +1,8 @@
-import { Email, ShoppingCartTwoTone, LogoutTwoTone } from "@mui/icons-material";
-import { Box, Tooltip, IconButton, Menu, MenuItem, Divider, ListItemIcon, Avatar } from "@mui/material";
+import { Email, ShoppingCartTwoTone, LogoutTwoTone, PhoneAndroid } from "@mui/icons-material";
+import { Box, Tooltip, IconButton, Menu, MenuItem, Divider, ListItemIcon, Avatar, Typography } from "@mui/material";
 import React, { Fragment, useState } from "react";
 import { SignOutUser } from "../../features/account/accountSlice";
+import { clearBasket } from "../../features/BasketPage/BasketSlice";
 import { RootState, useAppDispatch, useAppSelector } from "../REDUX/configureStore";
 
 export default function SignedInUserMenu() {
@@ -24,9 +25,10 @@ export default function SignedInUserMenu() {
             size="small"
             sx={{ ml: 2 }}
           >
-            <Avatar src={user?.profilePhotoURL} sx={{ width: 34, height: 34 }} />
+            <Avatar sx={{ width: 34, height: 34 }} >{(user?.userName)?.charAt(0).toUpperCase()}</Avatar>
           </IconButton>
         </Tooltip>
+        <Typography variant='subtitle2' sx={{display: 'flex'}}>Welcome {user?.userName}</Typography>
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -64,7 +66,8 @@ export default function SignedInUserMenu() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem>
-          <Avatar src={user?.profilePhotoURL} alt={user?.name} /> {user?.name}
+          <Avatar src={"images/profiles/Thumbnail.png"} />
+          {user?.userName}
         </MenuItem>
         <Divider />
         <MenuItem>
@@ -75,12 +78,21 @@ export default function SignedInUserMenu() {
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
+            <PhoneAndroid fontSize="small" />
+          </ListItemIcon>
+          {user?.phoneNumber}
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
             <ShoppingCartTwoTone fontSize="small" />
           </ListItemIcon>
           My Orders
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => dispatch(SignOutUser())}>
+        <MenuItem
+        onClick={() =>{ dispatch(SignOutUser());
+                        dispatch(clearBasket());                           
+                      }}>
           <ListItemIcon>
             <LogoutTwoTone fontSize="small" />
           </ListItemIcon>

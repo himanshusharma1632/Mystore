@@ -23,7 +23,7 @@ export const fetchBasketAsync = createAsyncThunk<Basket>(
         }
     }, {
         condition : () => {
-            if(!getCookie('buyerId')) return false;
+            if(!getCookie("buyerId")) return false;
         }
     }
 )
@@ -58,6 +58,9 @@ export const basketSlice = createSlice({
         setBasket : (state, action) => {
          state.basket = action.payload
         },
+        clearBasket: (state) => {
+            state.basket = null;
+        }
     },
 
     extraReducers : (builder => {
@@ -80,15 +83,16 @@ export const basketSlice = createSlice({
         builder.addCase(removeBasketItemAsync.rejected, (state)=> {
             state.status = 'idle_State';
         });
-        builder.addMatcher(isAnyOf(addBasketItemAsync.fulfilled, fetchBasketAsync.fulfilled),  (state, action) => {
+        builder.addMatcher(isAnyOf(addBasketItemAsync.fulfilled, fetchBasketAsync.fulfilled), (state, action) => {
             state.basket = action.payload;
             state.status = 'idle_State';
         });
-        builder.addMatcher(isAnyOf(addBasketItemAsync.rejected, fetchBasketAsync.rejected),  (state)=> {
+        builder.addMatcher(isAnyOf(addBasketItemAsync.rejected, fetchBasketAsync.rejected), (state, action)=> {
             state.status = 'idle_State';
+            console.log(action.payload);
         });
 
     })
 });
 
-export const { setBasket } = basketSlice.actions;
+export const { setBasket, clearBasket } = basketSlice.actions;

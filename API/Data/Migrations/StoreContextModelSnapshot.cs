@@ -148,9 +148,6 @@ namespace API.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("profilePhotoURL")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -191,15 +188,15 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2a4d2c18-6942-4568-8292-32744bd187dc",
-                            ConcurrencyStamp = "9ac9cdbe-9749-4b41-a803-51be8a0a5130",
+                            Id = "3c854bfb-bfb4-4896-9008-40114b15c8be",
+                            ConcurrencyStamp = "4ed2480f-b303-4240-97fb-494450470b7e",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "e748b040-8960-4825-a076-15a8a4a66298",
-                            ConcurrencyStamp = "2df801d3-cb03-439f-9a8e-2b59d33262b5",
+                            Id = "3c7d8805-f9ab-43b0-8c43-d4f4f3b1031a",
+                            ConcurrencyStamp = "1b050639-db1f-4ab3-a449-fa1407f16cf8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

@@ -40,14 +40,14 @@ const BasketFetcher ={
 }
 
 const Account = {
-    login : (values : any) => requests.post('account/login', values),
-    register : (values : any) => requests.post('account/register', values),
-    currentUser : () => requests.get('account/currentUser'),
+    login : (values : any) => requests.post('Account/login', values),
+    register : (values : any) => requests.post('Account/register', values),
+    currentUser : () => requests.get('Account/currentUser'),
 }
 
 axios.interceptors.request.use(config => {
-    const token = store.getState().account.user?.Token;
-    if(token) config.headers!.Authorization = `Bearer ${token}`;
+    const token = store.getState().account.user?.token;
+    if(token) config.headers.Authorization = `Bearer ${token}`;
         return config;
 });
 
@@ -57,7 +57,7 @@ axios.interceptors.response.use(async response =>{
     if (pagination) {
         response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
         console.log(response);
-        return response;   
+        return response; 
     }
     return response;
 }, (error: AxiosError)=>{
