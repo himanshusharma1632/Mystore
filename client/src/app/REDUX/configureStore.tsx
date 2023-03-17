@@ -4,6 +4,7 @@ import { accountSlice } from '../../features/account/accountSlice';
 import { basketSlice } from '../../features/BasketPage/BasketSlice';
 import { catalogSlice } from '../../features/catalog/catalogSlice';
 import { counterSlice } from '../../features/Contact/counterSlice';
+import { orderSlice } from '../../features/Order/orderSlice';
 
 export const store = configureStore({
      reducer : {
@@ -11,6 +12,7 @@ export const store = configureStore({
         basket: basketSlice.reducer,
         catalog : catalogSlice.reducer,
         account : accountSlice.reducer,
+        orders : orderSlice.reducer
      }
 });
 

@@ -1,6 +1,7 @@
 import { Email, ShoppingCartTwoTone, LogoutTwoTone, PhoneAndroid } from "@mui/icons-material";
 import { Box, Tooltip, IconButton, Menu, MenuItem, Divider, ListItemIcon, Avatar, Typography } from "@mui/material";
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { SignOutUser } from "../../features/account/accountSlice";
 import { clearBasket } from "../../features/BasketPage/BasketSlice";
 import { RootState, useAppDispatch, useAppSelector } from "../REDUX/configureStore";
@@ -83,10 +84,12 @@ export default function SignedInUserMenu() {
           {user?.phoneNumber}
         </MenuItem>
         <MenuItem>
+          <Link to={'/Order'} style={{textDecoration : 'none'}}>
           <ListItemIcon>
             <ShoppingCartTwoTone fontSize="small" />
           </ListItemIcon>
           My Orders
+          </Link>
         </MenuItem>
         <Divider />
         <MenuItem

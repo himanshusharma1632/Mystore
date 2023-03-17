@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -81,6 +82,7 @@ await _userManager.AddToRoleAsync(registeredUser, "Member");
 return StatusCode(201);
 }
 
+//getting the current user
 [Authorize]
 [HttpGet("currentUser")]
 public async Task<ActionResult<UserDTO>> GetCurrentUser() {
@@ -94,6 +96,14 @@ userName = user.UserName,
 PhoneNumber = user.PhoneNumber,
 Basket = userBasket?.BasketDTOGetter()
 };
+}
+
+//endpoint for getting the saved Address
+[Authorize]
+[HttpGet("savedAddress")]
+public async Task<ActionResult<UserAddress>> RetriveUserAddress(){
+    return await _userManager.Users.Where(x =>x.UserName == User.Identity.Name)
+    .Select(a =>a.Address).FirstOrDefaultAsync();
 }
 
 //code for getting the basket

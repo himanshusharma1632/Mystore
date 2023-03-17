@@ -22,7 +22,10 @@ import Login from "../../features/account/Login/Login";
 import Register from "../../features/account/Register/Register";
 import { fetchUserAsync } from "../../features/account/accountSlice";
 import PrivateRoute from "../../features/account/PrivateRoute";
-import CheckoutPage from "../../features/CheckoutPage/CheckoutPage";
+import OrdersPage from "../../features/Order/OrdersPage";
+import OrderDetails from "../../features/Order/OrderDetails";
+import CheckoutWrapper from "../../features/CheckoutPage/CheckoutWrapper";
+
 
 
 
@@ -83,7 +86,9 @@ if (initializing) return <Loading message="Staging App ..." />
      <Route exact path ='/BasketPage' component={BasketPage} />
      <Route exact path ='/account/Login' component={Login} />
      <Route exact path ='/account/Register' component={Register} />
-     <PrivateRoute exact path='/CheckoutPage' component={CheckoutPage} />
+     <PrivateRoute exact path='/CheckoutPage' component={CheckoutWrapper} />
+     <PrivateRoute exact path='/Order' component={OrdersPage} />
+     <PrivateRoute exact path='/Order/:id' component={OrderDetails} />
      <Route component ={NotFound} />
      </Switch>
      </Container>

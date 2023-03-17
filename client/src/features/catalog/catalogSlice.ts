@@ -45,7 +45,7 @@ export const productsFetchAsync = createAsyncThunk<Product[], void, {state: Root
     async (_, thunkAPI) =>{
         const params = AxiosGetParams(thunkAPI.getState().catalog.productParams);
         try {
-         const response = await agent.Catalog.list(params);
+        const response = await agent.Catalog.list(params);
         thunkAPI.dispatch(setMetaData(response.metaData));
         return response.items;
         }catch(error : any) {
@@ -114,7 +114,7 @@ export const catalogSlice = createSlice({
            state.status = 'pendingProductsFetch';
        });
        builder.addCase(productsFetchAsync.fulfilled, (state, action) => {
-           productsAdapter.setAll(state, action);
+           productsAdapter.addMany(state, action);
            state.status = 'idle';
            state.loadedProducts = true;
        });
@@ -139,7 +139,7 @@ export const catalogSlice = createSlice({
            state.typeList = action.payload.typeList;
            console.log(state.brandList);
            console.log(state.typeList);
-           state.filtersLoaded = true;
+           state.filtersLoaded = true; 
        });
        builder.addCase(fetchFilters.rejected, (state) => {
            state.status = 'idle';

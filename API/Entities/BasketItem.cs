@@ -8,7 +8,6 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public int Quantity {get; set;}
-       
 
         //navigation to the product
          public int ProductId { get; set; }

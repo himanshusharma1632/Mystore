@@ -7,6 +7,9 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public string BuyerId { get; set; }
+
+        public string PaymentIntentId { get; set; }
+        public string ClientSecretForStripe { get; set; }
         public List<BasketItem> Items { get; set; } = new List<BasketItem>();
 
         //for adding an item into the basket items

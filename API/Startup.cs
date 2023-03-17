@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Net.NetworkInformation;
 using System.Text;
 using API.Data;
 using API.Entities;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,7 +74,7 @@ namespace API
             services.AddIdentityCore<User>(options => {
             options.User.RequireUniqueEmail = true;
             })
-            .AddRoles<IdentityRole>()
+            .AddRoles<Role>()
             .AddEntityFrameworkStores<StoreContext>();
             //Authentication Service
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -91,8 +89,10 @@ namespace API
             });
             //Authorization Service
             services.AddAuthorization();
-            //our custom token (JWT) service
+            //our custom token (JWT) service (from TokenService.cs class)
             services.AddScoped<TokenService>();
+            //our payment service (from PaymentService.cs class)
+            services.AddScoped<PaymentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

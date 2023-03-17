@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import { URLSearchParams } from "url";
 import { history } from "../..";
@@ -10,7 +11,7 @@ const sleep =()=> new Promise(resolve => setTimeout(resolve, 500));
 axios.defaults.baseURL='http://localhost:5000/api/';
 axios.defaults.withCredentials =true;
 
-const responseBody = (response: AxiosResponse) => response.data;
+const responseBody = (response : AxiosResponse) => response.data;
 
 const requests ={
     get: (url: string, params ? : URLSearchParams)=> axios.get(url, {params}).then(responseBody),
@@ -43,6 +44,18 @@ const Account = {
     login : (values : any) => requests.post('Account/login', values),
     register : (values : any) => requests.post('Account/register', values),
     currentUser : () => requests.get('Account/currentUser'),
+    savedAddress : () => requests.get('Account/savedAddress')
+}
+
+const Orders = {
+get : () => requests.get('Orders'),
+getDetail : (id : number) => requests.get(`Orders/${id}`),
+createOrder : (values : FieldValues) => requests.post('Orders', values) 
+}
+
+const Payments = {
+    //when we are sending nothing as 'post', then we should send an empty object to API Server
+    createIntent : () => requests.post('Payment', {}),
 }
 
 axios.interceptors.request.use(config => {
@@ -107,7 +120,13 @@ axios.interceptors.response.use(async response =>{
 })
 
 const agent = {
-    Catalog, TestError, BasketFetcher, Account
+    Catalog, 
+    TestError,
+    BasketFetcher,
+    Account, 
+    Orders,
+    Payments
+
 }
 
 export default agent;

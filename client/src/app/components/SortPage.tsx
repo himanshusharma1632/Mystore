@@ -1,4 +1,4 @@
-import { Paper, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { Fragment } from "react";
 
 interface Props {
