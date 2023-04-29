@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { FieldValues } from "react-hook-form";
-import { history } from "../..";
 import agent from "../../app/api/agent";
 import { User } from "../../app/models/User";
 import { setBasket } from "../BasketPage/BasketSlice";
+import { router } from "../../Routes/Routes";
 
 interface AccountState {
     user : User | null;
@@ -55,7 +55,7 @@ export const accountSlice = createSlice({
         SignOutUser : (state) => {
             state.user = null;
             localStorage.removeItem('user');
-            history.push('/');
+            router.navigate('/');
         },
         setUser : (state, action) => {
             state.user = action.payload;

@@ -8,14 +8,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { FieldValues, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/REDUX/configureStore';
 import { loginUserAsync } from '../accountSlice';
+import { router } from '../../../Routes/Routes';
 
 
 export default function Login() {
-const history = useHistory();
-const location = useLocation<any>();
+const location = useLocation();
 const dispatch = useAppDispatch();
 const { register, handleSubmit, formState : {isSubmitting, isValid, errors}} = useForm({
   mode : 'all'
@@ -23,7 +23,7 @@ const { register, handleSubmit, formState : {isSubmitting, isValid, errors}} = u
 
 const submitForm = async (data : FieldValues) => {
   await dispatch(loginUserAsync(data));
-  history.push(location.state?.from?.pathname || 'catalog');
+  router.navigate(location.state?.from?.pathname || 'catalog');
 };
 
   return (
@@ -83,7 +83,7 @@ const submitForm = async (data : FieldValues) => {
                 })}
                 placeholder="Enter a username"
                 error={!!errors?.username}
-                helperText ={errors?.username?.message}
+                helperText = {errors?.username?.message?.toString()}
               />
               <TextField
                 margin="normal"
@@ -98,7 +98,7 @@ const submitForm = async (data : FieldValues) => {
                 autoFocus ={true}
                 placeholder = "Enter a password"
                 error={!!errors?.password}
-                helperText ={errors?.password?.message}
+                helperText = {errors?.password?.message?.toString()}
               />
               <LoadingButton
                 type="submit"

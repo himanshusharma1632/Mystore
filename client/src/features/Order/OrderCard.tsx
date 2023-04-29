@@ -1,6 +1,6 @@
 import { TableContainer, Paper, Table, TableRow, TableBody, styled, TableCell, tableCellClasses, Avatar, Button } from '@mui/material';
 import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Order } from '../../app/models/Order';
 import CurrencyConvert from '../../app/util/CurrencyConverter';
 
@@ -29,6 +29,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function OrderCard({order} : Props) {
+
+// appending a particular :id over order<List>
+const {id} = useParams<{id: string}>();
   return (
   <Fragment>
    <TableContainer component={Paper}>
@@ -44,7 +47,7 @@ export default function OrderCard({order} : Props) {
             <StyledTableCell align="right" sx={{fontWeight : 500}}>{CurrencyConvert(order.total)}</StyledTableCell>
             <StyledTableCell align="right" sx={{fontWeight : 500}}>
               <Link
-               to ={`Order/${order.id}`}
+               to ={`/order/${order.id}`}
                style={{textDecoration : 'none'}}
                >
               <Button variant='contained' color='info' disableElevation>View Details</Button>

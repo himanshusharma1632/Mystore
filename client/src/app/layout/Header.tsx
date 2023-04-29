@@ -54,9 +54,8 @@ const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0)
              <Box display='flex'
              alignItems='center'>
                 <Typography variant='h6'
-                   component={NavLink}
+                   component = {NavLink}
                    to='/'
-                   exact 
                    sx={NavStyles}  
                 >
                     My-Store
@@ -101,7 +100,7 @@ const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0)
             <IconButton size='large' 
             sx={{color: 'inherit'}}
             component={Link}
-            to='/BasketPage'
+            to='basket'
             >
                     <Badge badgeContent={CountBasket} color='warning'>
                         <ShoppingCart />

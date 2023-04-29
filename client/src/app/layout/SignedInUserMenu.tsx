@@ -84,7 +84,7 @@ export default function SignedInUserMenu() {
           {user?.phoneNumber}
         </MenuItem>
         <MenuItem>
-          <Link to={'/Order'} style={{textDecoration : 'none'}}>
+          <Link to={'order'} style={{textDecoration : 'none'}}>
           <ListItemIcon>
             <ShoppingCartTwoTone fontSize="small" />
           </ListItemIcon>

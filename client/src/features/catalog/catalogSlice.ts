@@ -114,11 +114,12 @@ export const catalogSlice = createSlice({
            state.status = 'pendingProductsFetch';
        });
        builder.addCase(productsFetchAsync.fulfilled, (state, action) => {
-           productsAdapter.addMany(state, action);
+           productsAdapter.setAll(state, action.payload);
            state.status = 'idle';
            state.loadedProducts = true;
        });
-       builder.addCase(productsFetchAsync.rejected, (state)=> {
+       builder.addCase(productsFetchAsync.rejected, (state, action)=> {
+           console.log(action.payload);
            state.status = 'idle'
        });
        builder.addCase(productFetchAsync.pending, (state)=> {
@@ -148,4 +149,4 @@ export const catalogSlice = createSlice({
 });
 
 export const productSelector = productsAdapter.getSelectors((state : RootState) => state.catalog);
-export const {setProductParams, resetProductParams, setMetaData} = catalogSlice.actions;  //making the setProductParams and resetProductParams Global for usage
+export const {setProductParams, resetProductParams, setMetaData} = catalogSlice.actions; 

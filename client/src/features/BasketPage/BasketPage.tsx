@@ -25,7 +25,7 @@ if(!basket) return <Typography variant="h4" sx={{mt: 10}}>Your Basket Is Empty</
               <Grid item xs={12} lg={3} md={4}>
                 <BasketSummary />
               <Grid item xs={12} lg={12} md={4}>
-              <Link to ="CheckoutPage">
+              <Link to ={"/checkout"}>
               <Button variant="contained" color='success' fullWidth sx={{textDecoration : 'none'}}>Proceed to Checkout</Button>
               </Link>
              </Grid>

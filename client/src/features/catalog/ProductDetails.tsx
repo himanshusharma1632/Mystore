@@ -3,17 +3,15 @@ import { Button, Divider, Grid, Rating, Table, TableBody, TableCell, TableContai
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import agent from "../../app/api/agent";
 import Loading from "../../app/layout/Loading";
-import {Product} from "../../app/models/product";
 import { useAppDispatch, useAppSelector } from "../../app/REDUX/configureStore";
 import { addBasketItemAsync, removeBasketItemAsync } from "../BasketPage/BasketSlice";
-import { catalogSlice, productFetchAsync, productSelector } from "./catalogSlice";
+import { productFetchAsync, productSelector } from "./catalogSlice";
 
 
 export default function ProductDetails() {
     const {id} = useParams<{id: string}>();
-    const product = useAppSelector(state => productSelector.selectById(state, id));
+    const product = useAppSelector(state => productSelector.selectById(state, id!));
         
     const dispatch = useAppDispatch();
     const { basket, status } = useAppSelector(state => state.basket);
@@ -24,7 +22,7 @@ export default function ProductDetails() {
 
     useEffect(() => {
       if (items) setQuantity(items.quantity);
-       if (!product) dispatch(productFetchAsync(parseInt(id)));
+       if (!product) dispatch(productFetchAsync(parseInt(id!)));
     }, [id, items, dispatch, product])
   
 

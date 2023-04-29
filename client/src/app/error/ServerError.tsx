@@ -1,12 +1,12 @@
 import { Button, Container, Divider, Grid, Paper, Typography } from "@mui/material";
-import { useHistory, useLocation } from "react-router";
+import { useLocation } from "react-router";
+import { router } from "../../Routes/Routes";
 
 
 
 export default function ServerError(){
 
-    const history =useHistory();
-    const {state} = useLocation<any>();
+    const {state} = useLocation();
 
     return(
         <Container component ={Paper} sx={{mt: 10}}>
@@ -20,7 +20,7 @@ export default function ServerError(){
                 <Typography variant ='h6'>Server Error</Typography>
             )}
             <Grid container spacing={3} sx={{mt: 2, p: 2, justifyContent: 'center'}}>
-            <Button variant ='contained' onClick ={()=> history.push('/catalog')} >Go Back to Catalog</Button>
+            <Button variant ='contained' onClick ={()=> router.navigate('/catalog')} >Go Back to Catalog</Button>
             </Grid>
         </Container>
         

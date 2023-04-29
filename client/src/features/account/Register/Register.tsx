@@ -8,12 +8,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { FieldValues, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { useHistory } from 'react-router-dom';
 import agent from '../../../app/api/agent';
+import { router } from '../../../Routes/Routes';
 
 
 export default function Register() {
-const history = useHistory();
 const { register, handleSubmit, setError, formState : {isSubmitting, isValid, errors}} = useForm({
   mode : 'all'
 });
@@ -81,7 +80,7 @@ const handleErrors = (errors : any) => {
             <Box component="form" noValidate 
             onSubmit=
             {handleSubmit((data : FieldValues) => agent.Account.register(data)
-             .then(() => history.push('Login'))    
+             .then(() => router.navigate('Login'))    
              .catch((error : any) => handleErrors(error)))} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
@@ -96,7 +95,7 @@ const handleErrors = (errors : any) => {
                 })}
                 placeholder="Enter a username"
                 error={!!errors?.userName}
-                helperText ={errors?.userName?.message}
+                helperText ={errors?.userName?.message?.toString()}
               />
                <TextField
                 margin="normal"
@@ -111,7 +110,7 @@ const handleErrors = (errors : any) => {
                 autoFocus ={true}
                 placeholder = "Enter your Email ID"
                 error={!!errors?.Email}
-                helperText ={errors?.Email?.message}
+                helperText ={errors?.Email?.message?.toString()}
               />
               <TextField
                 margin="normal"
@@ -126,7 +125,7 @@ const handleErrors = (errors : any) => {
                 autoFocus ={true}
                 placeholder = "Your 10 digits phone no."
                 error={!!errors?.PhoneNumber}
-                helperText ={errors?.PhoneNumber?.message}
+                helperText ={errors?.PhoneNumber?.message?.toString()}
               />
               <TextField
                 margin="normal"
@@ -142,7 +141,7 @@ const handleErrors = (errors : any) => {
                 autoFocus ={true}
                 placeholder = "Enter a password"
                 error={!!errors?.Password}
-                helperText ={errors?.Password?.message}
+                helperText ={errors?.Password?.message?.toString()}
               />
               <LoadingButton
                 type="submit"

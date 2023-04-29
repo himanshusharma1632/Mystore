@@ -10,13 +10,13 @@ import ShipTo from "./ShippingAddress";
 
 export default function OrderDetails(){
 const {id} = useParams<{id : string}>();
-const order = useAppSelector(state => orderSelector.selectById(state, id));
+const order = useAppSelector(state => orderSelector.selectById(state, id!));
 const dispatch = useAppDispatch();
 const subTotal = order?.orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) ?? 0;
 
 useEffect(() => {
     if(!order) {
-        dispatch(fetchOrderAsync(parseInt(id)));
+        dispatch(fetchOrderAsync(parseInt(id!)));
     }
 }, [dispatch, id, order])
     return(
