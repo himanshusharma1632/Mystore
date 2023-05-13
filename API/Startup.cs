@@ -62,7 +62,7 @@ namespace API
             //Database Context Service
             services.AddDbContext<StoreContext>(opt =>
             {
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             //Cors Services

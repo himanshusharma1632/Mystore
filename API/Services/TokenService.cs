@@ -42,7 +42,7 @@ var options = new JwtSecurityToken(
     issuer : null,
     audience : null,
     claims : claims,
-    expires : DateTime.Now.AddDays(7).AddHours(12),
+    expires : DateTime.UtcNow.AddDays(7).AddHours(12),
     signingCredentials : cred
 );
 //writing the token

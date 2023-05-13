@@ -12,7 +12,7 @@ namespace API.Entities.OrderAggregate
         public string PaymentIntentId { get; set; }
         public List<OrderItem> OrderItems { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.isPending;
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public long Subtotal { get; set; }
 
         public long GetTotal() {
