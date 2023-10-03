@@ -31,7 +31,7 @@ export default function Catalog() {
         if (!filtersLoaded) dispatch(fetchFilters());
     }, [filtersLoaded, dispatch]);
 
-    if (!filtersLoaded) return <Loading />
+    if (!filtersLoaded) return <Loading />;
 
 
     return (
