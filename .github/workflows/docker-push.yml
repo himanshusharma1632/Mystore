@@ -2,9 +2,9 @@ name: mystore-auto-docker-push
 
 on: 
    workflow_dispatch: 
-#  push:
-#    branches:
-#      - 'main'
+   push:
+    branches:
+          - 'main'
 
 jobs:
   docker:
