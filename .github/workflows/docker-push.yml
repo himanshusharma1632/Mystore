@@ -25,4 +25,4 @@ jobs:
         with:
           push: true
           context: "{{DefaultContext}}:API"
-          tags: SharmajiCodes/mystore:latest
+          tags: sharmajicodes/mystore:latest
