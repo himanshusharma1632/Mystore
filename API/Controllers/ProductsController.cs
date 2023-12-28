@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using API.Extentions;
 using API.RequestHelpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +37,13 @@ namespace API.Controllers
         
         }
 
+        [HttpGet("{id}", Name = "GetProduct")]
+
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            return await _context.Products.FindAsync(id);
+        }
+
         [HttpGet("filters")]
         public async Task<IActionResult> GetFilters() {
         var brandList = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
@@ -42,11 +51,25 @@ namespace API.Controllers
         return Ok(new {brandList, typeList});
         }
 
-        [HttpGet("{id}")]
-
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult<Product>> CreateNewProduct (CreateProductDTO productDTO)
         {
-            return await _context.Products.FindAsync(id);
+            // traditional method of mapping entities
+            var product = new Product {
+             Name = productDTO.Name,
+             Description = productDTO.Description,
+             Price = productDTO.Price,
+             TypeofProduct = productDTO.TypeofProduct,
+             Brand = productDTO.Brand,
+             PictureUrl = "picture-url not dealt as far as now!",
+             QuantityInStock = productDTO.QuantityInStock
+            };
+
+            _context.Products.Add(product);
+            var result = await _context.SaveChangesAsync() > 0;
+            if (result) return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
+            return BadRequest(new ProblemDetails { Title = "Failed to Add Product to the Database" });
         }
     }
 }
