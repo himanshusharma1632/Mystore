@@ -3,6 +3,7 @@ using System.Text;
 using API.Data;
 using API.Entities;
 using API.Middleware;
+using API.RequestHelpers;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -30,12 +31,15 @@ namespace API
         {
 
             services.AddControllers();
+
+            // Automapper Service
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             
             //SwaggerGen Services
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme{
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                    Name = "Authorization",
                    Description = "JWT Auth Token",
                    In = ParameterLocation.Header,
@@ -67,6 +71,7 @@ namespace API
 
             //Cors Services
             services.AddCors();
+
             //Identity Service
             services.AddIdentityCore<User>(options => {
             options.User.RequireUniqueEmail = true;
@@ -86,10 +91,15 @@ namespace API
             });
             //Authorization Service
             services.AddAuthorization();
+
             //our custom token (JWT) service (from TokenService.cs class)
             services.AddScoped<TokenService>();
+
             //our payment service (from PaymentService.cs class)
             services.AddScoped<PaymentService>();
+            
+            // our cloudinary image (upload | delete) service (from ImageService.cs class)
+            services.AddScoped<ImageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

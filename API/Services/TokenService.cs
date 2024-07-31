@@ -28,22 +28,23 @@ public async Task<string> GenerateToken(User user)
         new Claim(ClaimTypes.Email, user.Email),
         new Claim(ClaimTypes.Name, user.UserName),
     };
+
 //adding a role
 var roles = await _userManager.GetRolesAsync(user);
 foreach(var role in roles) {
-    new Claim(ClaimTypes.Role, role);
+    claims.Add(new Claim(ClaimTypes.Role, role));
 }
 //adding encryption
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTSettings:TokenKey"]));
 //adding a trusted signature
-var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 //creating tokenOptions
 var options = new JwtSecurityToken(
     issuer : null,
     audience : null,
     claims : claims,
     expires : DateTime.UtcNow.AddDays(7).AddHours(12),
-    signingCredentials : cred
+    signingCredentials : creds
 );
 //writing the token
 return new JwtSecurityTokenHandler().WriteToken(options);

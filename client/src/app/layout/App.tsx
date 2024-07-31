@@ -53,7 +53,7 @@ InitializeApplication().then(() => setinitializing(false));
      <Header darkMode={darkMode} HandleThemeChange={HandleThemeChange} />
      {initializing ? <Loading message="Staging App ..." />
                    : location.pathname === '/' ?  <HomePage />
-                   : ( <Container>
+                   : ( <Container sx = {{ mt : 9 }}>
                          <Outlet />
                        </Container> )}
      </ThemeProvider>

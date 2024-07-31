@@ -5,13 +5,13 @@ import { Product, ProductParams } from "../../app/models/product";
 import { RootState } from "../../app/REDUX/configureStore";
 
 interface CatalogState {
-    loadedProducts : boolean,
-    filtersLoaded : boolean,
-    brandList : string[],
-    status : string,
-    typeList : string[],
-    productParams: ProductParams,
-    metaData : MetaData | null
+ loadedProducts : boolean,
+ filtersLoaded : boolean,
+ brandList : string[],
+ status : string,
+ typeList : string[],
+ productParams: ProductParams,
+ metaData : MetaData | null
 }
 
 function AxiosGetParams (productParams : ProductParams) {
@@ -107,6 +107,9 @@ export const catalogSlice = createSlice({
        },
        resetProductParams : (state) => {
         state.productParams = initParams();//this reducer is refresh when new batch of product is loaded
+       },
+       setProduct : (state, action) => {
+        productsAdapter.upsertOne(state, action.payload);
        }
    },
    extraReducers : (builder => {
@@ -149,4 +152,4 @@ export const catalogSlice = createSlice({
 });
 
 export const productSelector = productsAdapter.getSelectors((state : RootState) => state.catalog);
-export const {setProductParams, resetProductParams, setMetaData} = catalogSlice.actions; 
+export const {setProductParams, resetProductParams, setMetaData, setProduct} = catalogSlice.actions; 

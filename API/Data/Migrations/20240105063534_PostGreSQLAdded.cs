@@ -99,11 +99,9 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    Rating = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<long>(type: "bigint", nullable: false),
                     PictureUrl = table.Column<string>(type: "text", nullable: true),
-                    New_Arrival = table.Column<string>(type: "text", nullable: true),
                     TypeofProduct = table.Column<string>(type: "text", nullable: true),
                     Brand = table.Column<string>(type: "text", nullable: true),
                     QuantityInStock = table.Column<int>(type: "integer", nullable: false)
@@ -303,8 +301,8 @@ namespace API.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "a709449a-d369-4393-b833-ed90f1377f4e", "Member", "MEMBER" },
-                    { 2, "60980ae8-632b-47b0-ba2b-7c0201cd26fa", "Admin", "ADMIN" }
+                    { 1, "04c417e1-c377-4e65-b417-5166fe31c751", "Member", "MEMBER" },
+                    { 2, "ced34ff8-b06c-4fa3-b483-78ec0c9217b0", "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

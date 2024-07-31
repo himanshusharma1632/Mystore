@@ -1,6 +1,5 @@
 import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom";
 import App from "../app/layout/App";
-import HomePage from "../features/home/HomePage";
 import Register from "../features/account/Register/Register";
 import Login from "../features/account/Login/Login";
 import Catalog from "../features/catalog/Catalog";
@@ -9,13 +8,13 @@ import ContactPage from "../features/Contact/ContactPage";
 import CollectionPage from "../features/Collections/CollectionPage";
 import ServerError from "../app/error/ServerError";
 import BasketPage from "../features/BasketPage/BasketPage";
-import CheckoutPage from "../features/CheckoutPage/CheckoutPage";
 import OrdersPage from "../features/Order/OrdersPage";
 import ProductDetails from "../features/catalog/ProductDetails";
 import OrderDetails from "../features/Order/OrderDetails";
 import NotFound from "../app/error/NotFound";
 import RequireAuth from "./RequireAuth";
 import CheckoutWrapper from "../features/CheckoutPage/CheckoutWrapper";
+import Inventory from "../features/admin/Inventory";
 
 export const routes : RouteObject[] = [
 { path : '/',
@@ -26,6 +25,7 @@ export const routes : RouteObject[] = [
     { path : "/checkout", element : <CheckoutWrapper /> }, // checkout page
     { path : "order", element : <OrdersPage /> }, // orders page
     { path : "order/:id", element : <OrderDetails /> }, // order-details page
+    { path : "inventory", element : <Inventory /> }, // inventory page (only admin authorized)
    ]},
 
    // below are the pages accessed for all new visitors
