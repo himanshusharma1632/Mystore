@@ -1,13 +1,13 @@
 import { Grid, Paper } from "@mui/material";
-import { useEffect } from "react";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
 import PaginationPage from "../../app/components/PaginationPage";
 import SortPage from "../../app/components/SortPage";
 import Loading from "../../app/layout/Loading";
 import { useAppDispatch, useAppSelector } from "../../app/REDUX/configureStore";
-import { fetchFilters, productSelector, productsFetchAsync, setProductParams } from "./catalogSlice";
+import { setProductParams } from "./catalogSlice";
 import ProductList from "./ProductList";
 import SearchPage from "./SearchPage";
+import useProducts from "../../app/hooks/useProducts";
 
 const sortList = [
     { value: 'name', label: 'Alphabatical' },
@@ -17,22 +17,11 @@ const sortList = [
 
 export default function Catalog() {
 
-
-    const products = useAppSelector(productSelector.selectAll);
-    const { loadedProducts, filtersLoaded, brandList, typeList, productParams, metaData } = useAppSelector(state => state.catalog);
+    const { products, brandList, typeList, filtersLoaded, metaData } = useProducts(); // custom reusable hook (products)
+    const { productParams } = useAppSelector(state => state.catalog);
     const dispatch = useAppDispatch();
 
-
-    useEffect(() => {
-        if (!loadedProducts) dispatch(productsFetchAsync());
-    }, [loadedProducts, dispatch]);
-
-    useEffect(() => {
-        if (!filtersLoaded) dispatch(fetchFilters());
-    }, [filtersLoaded, dispatch]);
-
     if (!filtersLoaded) return <Loading />;
-
 
     return (
         <>

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { FieldValues } from "react-hook-form";
 import agent from "../../app/api/agent";
 import { User } from "../../app/models/User";
@@ -58,15 +58,19 @@ export const accountSlice = createSlice({
             router.navigate('/');
         },
         setUser : (state, action) => {
-            state.user = action.payload;
+         const claims = JSON.parse(atob(action.payload.token.split('.')[1]));
+         let roles : string | string[] = claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+         state.user = { ...action.payload, roles : typeof(roles) === 'string' ? [roles] : roles };
         }
     },
     extraReducers : (builder => {
-     builder.addMatcher(isAnyOf(loginUserAsync.fulfilled, fetchUserAsync.fulfilled), (state, action) => {
-        state.user = action.payload;
+     builder.addMatcher(isAnyOf(loginUserAsync.fulfilled, fetchUserAsync.fulfilled), (state, action : PayloadAction<User>) => {
+      const claims = JSON.parse(atob(action.payload.token.split('.')[1]));
+      let roles : string | string[] = claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      state.user = { ...action.payload, roles : typeof(roles) === 'string' ? [roles] : roles };
     }); 
     builder.addMatcher(isAnyOf(loginUserAsync.rejected, fetchUserAsync.rejected), (state, action) => {
-        console.log(action.payload);
+     console.log(action.payload);
     })
   })
 });

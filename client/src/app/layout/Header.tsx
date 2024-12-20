@@ -75,8 +75,17 @@ const CountBasket = basket?.items.reduce((sum, items)=> sum + items.quantity, 0)
                    >
                    {title.toUpperCase()}
                 </ListItem>
-                  ))}
-                  </List>
+                ))}
+
+                {user && user.roles?.includes("Admin") &&
+                   <ListItem
+                   component = {NavLink}
+                   to={'/inventory'}
+                   sx={NavStyles}
+                   >
+                   {'INVENTORY'}
+                </ListItem> }
+                </List>
 
           <Box display='flex'
                alignItems='center'

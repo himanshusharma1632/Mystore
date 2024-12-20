@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20230429140504_PostGreSQLAdded")]
+    [Migration("20240105063534_PostGreSQLAdded")]
     partial class PostGreSQLAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,9 +150,6 @@ namespace API.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("New_Arrival")
-                        .HasColumnType("text");
-
                     b.Property<string>("PictureUrl")
                         .HasColumnType("text");
 
@@ -160,9 +157,6 @@ namespace API.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<int>("QuantityInStock")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Rating")
                         .HasColumnType("integer");
 
                     b.Property<string>("TypeofProduct")
@@ -205,14 +199,14 @@ namespace API.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "a709449a-d369-4393-b833-ed90f1377f4e",
+                            ConcurrencyStamp = "04c417e1-c377-4e65-b417-5166fe31c751",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "60980ae8-632b-47b0-ba2b-7c0201cd26fa",
+                            ConcurrencyStamp = "ced34ff8-b06c-4fa3-b483-78ec0c9217b0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

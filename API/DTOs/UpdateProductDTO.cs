@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace API.DTOs
 {
-    public class CreateProductDTO
+    public class UpdateProductDTO
     {
+        public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 
@@ -16,7 +18,6 @@ namespace API.DTOs
         [Range(100, Double.PositiveInfinity)]
         public long Price { get; set; }
 
-        [Required]
         public IFormFile File { get; set; }
 
         [Required]

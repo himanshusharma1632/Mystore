@@ -6,5 +6,6 @@ export interface User{
     phoneNumber : string;
     userName : string;
     token : string;
+    roles? : string[];
     basket? : Basket;
 }
