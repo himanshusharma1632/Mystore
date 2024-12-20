@@ -20,11 +20,15 @@ export const routes : RouteObject[] = [
 { path : '/',
   element : <App />,
   children : [ 
-    // below are the pages accessed only when user logs in
+    // below are the pages accessed only when user logs in (all user-role(s))
    { element : <RequireAuth />, children : [
     { path : "/checkout", element : <CheckoutWrapper /> }, // checkout page
     { path : "order", element : <OrdersPage /> }, // orders page
     { path : "order/:id", element : <OrderDetails /> }, // order-details page
+   ]},
+
+   // below are the pages accessed only when user is an "Admin"
+   { element : <RequireAuth roles = {["Admin"]} />, children : [
     { path : "inventory", element : <Inventory /> }, // inventory page (only admin authorized)
    ]},
 

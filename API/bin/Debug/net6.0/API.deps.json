@@ -71,6 +71,9 @@
         }
       },
       "Microsoft.AspNet.WebApi.Client/5.2.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
         "runtime": {
           "lib/net45/System.Net.Http.Formatting.dll": {
             "assemblyVersion": "5.2.0.0",

@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
-# copy API.csproj file and restore
+# copy API.csproj file and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
 
